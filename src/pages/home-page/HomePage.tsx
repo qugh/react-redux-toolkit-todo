@@ -15,13 +15,15 @@ const HomePage: FC = () => {
   }
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      dispatch(
-        addTodo({
-          id: newId,
-          name: newTodo,
-        })
-      )
-      setNewTodo('')
+        if (newTodo) {
+            dispatch(
+                addTodo({
+                    id: newId,
+                    name: newTodo,
+                })
+            )
+            setNewTodo('')
+        }
     }
   }
   const handleClick = ( event: MouseEvent<HTMLLIElement>) => {
