@@ -1,25 +1,27 @@
-import React, { FC,StrictMode, Suspense } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import './styles/index.css'
 import './styles/normalize.css'
-import {Provider} from "react-redux";
-import setupStore from "./redux/store";
-import {BrowserRouter as Router, Routes, Navigate, Route} from "react-router-dom";
-import routes from "./constants/routes";
-import {useRoutes} from "react-router-dom";
+import 'typeface-roboto'
+import { Provider } from 'react-redux'
+import setupStore from './redux/store'
+import { BrowserRouter as Router } from 'react-router-dom'
+import AppContainer from './app'
 
-interface AppState {}
 const store = setupStore()
-const AppContainer: FC<AppState> = () => {
-    let element = useRoutes(routes)
-    return (
-        <StrictMode>
-            <Provider store={store}>
-                {element}
-            </Provider>
-        </StrictMode>
 
-    )
-}
+ReactDOM.render(
+  <Router>
+    <Provider store={store}>
+      <AppContainer />
+    </Provider>
+  </Router>,
+  document.getElementById('root')
+)
 
-ReactDOM.render(<AppContainer />, document.getElementById('root'))
+
+
+
+
+
+

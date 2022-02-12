@@ -1,16 +1,26 @@
-import HomePage from "../pages/home-page/HomePage";
-import {RouteObject} from "react-router-dom";
 
-const routes: RouteObject[] = [
+import {RouteObject} from "react-router-dom";
+import HomePage from '../pages/home-page/HomePage'
+
+let routes: RouteObject[] = [
     {
-        path: '/',
+        path: "/",
         element: <HomePage />,
-    },
-    {
-        path:'/home',
-        element: HomePage
+        // children: [
+        //     { index: true, element: <HomePage /> },
+        //     {
+        //         path: "/courses",
+        //         element: <HomePage />,
+        //         children: [
+        //             { index: true, element: <HomePage /> },
+        //             { path: "/courses/:id", element: <HomePage /> }
+        //         ]
+        //     },
+        //     { path: "*", element: <HomePage /> }
+        // ]
     }
-]
+];
+
 
 
 export default routes
