@@ -7,11 +7,17 @@ import {
   FocusEvent,
 } from 'react'
 import { ITodo } from '../../types/Todo'
-import { changeTodo, removeTodo, restoreTodo } from '../../redux/reducers/todoReducer'
+import {
+  changeTodo,
+  removeTodo,
+  restoreTodo,
+} from '../../redux/reducers/todoReducer'
 import { useAppDispatch } from '../../hooks/redux'
 import styles from './ToDoItem.module.scss'
 import Input from '@mui/material/Input'
 import clsx from 'clsx'
+import TransparentButton from '../TransparentButton/TransparentButton'
+import { closeTag, restoreTag } from '../../constants/symbols'
 
 interface ITodoItem extends ITodo {
   isOld: boolean
@@ -22,11 +28,9 @@ const ToDoItem: FC<ITodoItem> = ({ id, name, isOld }) => {
   const [todoValue, setTodoValue] = useState(name)
   const dispatch = useAppDispatch()
 
-  const handleClick = (event: MouseEvent<HTMLLIElement>) => {
-    dispatch(removeTodo(event.currentTarget.id))
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    dispatch(removeTodo(id))
   }
-  const closeTag: string = '\u2716'
-  const restoreTag: string = '\u21F5'
 
   const openEditMode = (e: MouseEvent<HTMLSpanElement>) => {
     setEditMode(true)
@@ -61,7 +65,7 @@ const ToDoItem: FC<ITodoItem> = ({ id, name, isOld }) => {
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     editTodo()
   }
-  const handleClickRestore = (e:MouseEvent<HTMLSpanElement>) => {
+  const handleClickRestore = (e: MouseEvent<HTMLSpanElement>) => {
     dispatch(restoreTodo(id))
   }
 
@@ -73,13 +77,11 @@ const ToDoItem: FC<ITodoItem> = ({ id, name, isOld }) => {
           <div className={styles.todoId}>id: {id}</div>
         </del>
 
-        <span
-          id={id}
+        <TransparentButton
+          text={restoreTag}
           className={clsx([styles.action, styles.action__restore])}
           onClick={handleClickRestore}
-        >
-          {restoreTag}
-        </span>
+        />
       </>
     )
 
@@ -102,9 +104,12 @@ const ToDoItem: FC<ITodoItem> = ({ id, name, isOld }) => {
           <div className={styles.todoId}>id: {id}</div>
         </span>
       )}
-      <span id={id} className={styles.action} onClick={handleClick}>
-        {closeTag}
-      </span>
+
+      <TransparentButton
+        text={closeTag}
+        className={styles.action}
+        onClick={handleClick}
+      />
       {/*handleClick(item.id)*/}
     </>
   )
