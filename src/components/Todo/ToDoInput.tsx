@@ -11,8 +11,7 @@ const ToDoInput:FC = () => {
         setNewTodo(e.target.value)
     }
     const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            if (newTodo) {
+        if ( newTodo && e.key === 'Enter' ) {
                 dispatch(
                     addTodo({
                         id: nanoid(16),
@@ -20,7 +19,6 @@ const ToDoInput:FC = () => {
                     })
                 )
                 setNewTodo('')
-            }
         }
     }
     return(
