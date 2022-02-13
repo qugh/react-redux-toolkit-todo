@@ -1,51 +1,28 @@
-import { Input } from '@mui/material'
-import {FC, ChangeEvent, KeyboardEvent, useState, useMemo, MouseEvent} from 'react'
-import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import {getTodos,getNewTodoId} from '../../redux/selectors/todoSelector'
-import { addTodo, removeTodo } from '../../redux/reducers/todoReducer'
+
+import {
+  FC,
+  useMemo,
+} from 'react'
+import {  useAppSelector } from '../../hooks/redux'
+import { getTodos } from '../../redux/selectors/todoSelector'
 import styles from './HomePage.module.scss'
+import ToDoInput from "../../components/Todo/ToDoInput";
+import ToDoItem from "../../components/Todo/ToDoItem";
 
 const HomePage: FC = () => {
   const { todos } = useAppSelector(getTodos)
-    const newId = useAppSelector(getNewTodoId)
-  const dispatch = useAppDispatch()
-  const [newTodo, setNewTodo] = useState('')
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTodo(e.target.value)
-  }
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-        if (newTodo) {
-            dispatch(
-                addTodo({
-                    id: newId,
-                    name: newTodo,
-                })
-            )
-            setNewTodo('')
-        }
-    }
-  }
-  const handleClick = ( event: MouseEvent<HTMLLIElement>) => {
-  dispatch(removeTodo(+event.currentTarget.id))
-  }
+
   useMemo(() => {
-      console.log(todos)
-  },[todos])
+    console.log(todos)
+  }, [todos])
+
   return (
     <div className={'wrapper'}>
-      <Input
-        value={newTodo}
-        onChange={handleChange}
-        onKeyDown={handleKeyPress}
-        placeholder={'Add todo'}
-      />
+  <ToDoInput />
       <div>
         <ul className={styles.todo_container}>
           {todos.map((item) => (
-            <li style={{cursor:'pointer'}} id={String(item.id)} onClick={ handleClick} key={item.id}>
-              Todo: {item.name} Id: {item.id}
-            </li>
+        <ToDoItem key={item.id} id={item.id} name={item.name} />
           ))}
         </ul>
       </div>

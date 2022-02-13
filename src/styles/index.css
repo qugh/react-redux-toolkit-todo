@@ -6,11 +6,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #696b6c;
 }
+html{
+  box-sizing: border-box;
+}
+*, *::before, *::after{
+  box-sizing: inherit;
+}
 .wrapper{
   margin: 0 auto;
   max-width: 1280px;
   padding: 0px 20px;
 }
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
