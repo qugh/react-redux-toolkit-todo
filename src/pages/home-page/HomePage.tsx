@@ -1,4 +1,4 @@
-import { FC, useMemo, MouseEvent } from 'react'
+import { FC, MouseEvent } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import getTodos from '../../redux/selectors/todoSelector'
 import styles from './HomePage.module.scss'
@@ -14,38 +14,29 @@ const HomePage: FC = () => {
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     dispatch(removeAllTodos()) // Todo modal window
   }
-  useMemo(() => {
-    console.log(todos)
-  }, [todos])
   return (
     <div className={'wrapper'}>
       <ToDoInput />
-      <div style={{ minWidth: '100px' }}>
-        <ul className={styles.todo_container}>
-          {!!oldTodos.length && (
-            <TransparentButton
-              onClick={handleClick}
-              className={styles.delete_all}
-              text={clearAllTag}
-            />
-          )}
-          {todos.map((item) => (
-            <li key={item.id}>
-              <ToDoItem id={item.id} name={item.name} isOld={false} />
-            </li>
-          ))}
-          {oldTodos.map((item) => (
-            <li key={item.id}>
-              <ToDoItem
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                isOld={true}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
+
+      <ul className={styles.todo_container}>
+        {!!oldTodos.length && (
+          <TransparentButton
+            onClick={handleClick}
+            className={styles.delete_all}
+            text={clearAllTag}
+          />
+        )}
+        {todos.map(({ id, todoText }) => (
+          <li key={id}>
+            <ToDoItem id={id} todoText={todoText} isOld={false} />
+          </li>
+        ))}
+        {oldTodos.map(({ id, todoText }) => (
+          <li key={id}>
+            <ToDoItem id={id} todoText={todoText} isOld={true} />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

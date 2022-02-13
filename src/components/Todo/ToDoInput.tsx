@@ -16,7 +16,7 @@ const ToDoInput:FC = () => {
                 dispatch(
                     addTodo({
                         id: nanoid(16),
-                        name: newTodo,
+                        todoText: newTodo,
                     })
                 )
                 setNewTodo('')

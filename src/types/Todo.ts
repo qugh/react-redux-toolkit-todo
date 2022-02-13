@@ -1,5 +1,5 @@
 export interface ITodo {
     id: string,
-    name: string,
+    todoText: string,
     desc?: string,
 }

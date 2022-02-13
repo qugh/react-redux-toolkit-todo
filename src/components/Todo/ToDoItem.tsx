@@ -23,58 +23,59 @@ interface ITodoItem extends ITodo {
   isOld: boolean
 }
 
-const ToDoItem: FC<ITodoItem> = ({ id, name, isOld }) => {
+const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld }) => {
   const [editMode, setEditMode] = useState(false)
-  const [todoValue, setTodoValue] = useState(name)
+  const [todoValue, setTodoValue] = useState(todoText)
   const dispatch = useAppDispatch()
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const TodoItem = () => (
+    <>
+      <div className={styles.todoText}>{todoText}</div>
+      <div className={styles.todoId}>id: {id}</div>
+    </>
+  )
+
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) =>
     dispatch(removeTodo(id))
-  }
 
-  const openEditMode = (e: MouseEvent<HTMLSpanElement>) => {
-    setEditMode(true)
-  }
+  const openEditMode = (e: MouseEvent<HTMLSpanElement>) => setEditMode(true)
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setTodoValue(event.currentTarget.value)
-  }
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setTodoValue(e.currentTarget.value)
 
   const editTodo = () => {
-    const isValueHasChanged = name !== todoValue
+    const isValueHasChanged = todoText !== todoValue
     if (todoValue && isValueHasChanged) {
       dispatch(
         changeTodo({
           id,
-          name: todoValue,
+          todoText: todoValue,
         })
       )
     } else {
-      setTodoValue(name)
+      setTodoValue(todoText)
     }
-
     setEditMode(false)
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code === 'Escape' || e.code === 'Enter') editTodo()
   }
+
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     e.currentTarget.select()
   }
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-    editTodo()
-  }
-  const handleClickRestore = (e: MouseEvent<HTMLSpanElement>) => {
+
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => editTodo()
+
+  const handleClickRestore = (e: MouseEvent<HTMLSpanElement>) =>
     dispatch(restoreTodo(id))
-  }
 
   if (isOld)
     return (
       <>
         <del className={styles.oldTodo}>
-          <div className={styles.todoText}>{name}</div>
-          <div className={styles.todoId}>id: {id}</div>
+          <TodoItem />
         </del>
 
         <TransparentButton
@@ -100,17 +101,18 @@ const ToDoItem: FC<ITodoItem> = ({ id, name, isOld }) => {
         />
       ) : (
         <span onClick={openEditMode}>
-          <div className={styles.todoText}>{name}</div>{' '}
-          <div className={styles.todoId}>id: {id}</div>
+          <TodoItem />
         </span>
       )}
+
 
       <TransparentButton
         text={closeTag}
         className={styles.action}
         onClick={handleClick}
       />
-      {/*handleClick(item.id)*/}
+
+
     </>
   )
 }
