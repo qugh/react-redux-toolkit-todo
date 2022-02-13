@@ -1,7 +1,5 @@
 import { RootState } from '../store'
 
-export const getTodos = (state: RootState) => state.todoList
+const getTodos = (state: RootState) => state.todoList
 
-
-
-
+export default getTodos

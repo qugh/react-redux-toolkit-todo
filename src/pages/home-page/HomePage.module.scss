@@ -1,20 +1,29 @@
-.todo_container{
-  display:flex;
+.todo_container {
+  display: flex;
   flex-direction: column;
-  max-width:360px;
   justify-content: center;
-  padding-top:20px;
-  li{
-    margin-bottom:20px;
-    word-break:break-all;
-    padding:10px 10px;
+  padding-top: 20px;
+
+  .delete_all {
+    margin: 0px 0px 10px auto;
+    padding: 0 8px 0 0;
+    border: none;
+    background: #696b6c;
+    cursor: pointer;
+  }
+
+  li {
+    margin-bottom: 20px;
+    word-break: break-all;
+    padding: 10px 10px;
     border: 1px solid black;
     box-sizing: border-box;
-    color:white;
-    display:flex;
+    color: white;
+    display: flex;
     justify-content: space-between;
-    span{
-    cursor: pointer;
+
+    .action {
+      cursor: pointer;
     }
   }
 

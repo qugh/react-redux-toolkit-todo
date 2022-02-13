@@ -26,6 +26,7 @@ const ToDoInput:FC = () => {
     return(
         <Input
             value={newTodo}
+            sx={{width:'100%'}}
             onChange={handleChange}
             onKeyDown={handleKeyPress}
             placeholder={'Add todo'}

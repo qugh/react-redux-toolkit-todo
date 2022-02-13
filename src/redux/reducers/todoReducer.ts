@@ -5,12 +5,12 @@ const todoSliceName = 'todo'
 
 interface ITodos {
   todos: Array<ITodo>
-  deletedTodos: Array<ITodo>
+  oldTodos: Array<ITodo>
 }
 
 const initialState: ITodos = {
   todos: [],
-  deletedTodos: [],
+  oldTodos: [],
 }
 
 const todoSlice = createSlice({
@@ -22,7 +22,7 @@ const todoSlice = createSlice({
     },
     removeTodo: (state: ITodos, action: PayloadAction<string>) => {
       const oldTodo = state.todos.find((item) => item.id === action.payload)
-      state.deletedTodos.push(oldTodo!)
+      state.oldTodos.push(oldTodo!)
       state.todos = state.todos.filter((item) => item.id !== action.payload)
     },
     changeTodo: (state: ITodos, action: PayloadAction<ITodo>) => {
@@ -30,9 +30,18 @@ const todoSlice = createSlice({
         (item) => item.id === action.payload.id)
       state.todos[todoIdIndex] = action.payload
     },
+    restoreTodo: (state:ITodos, action: PayloadAction<string>)=> {
+      const newTodo = state.oldTodos.find((item)=> item.id === action.payload)
+      state.todos.push(newTodo!)
+      state.oldTodos = state.oldTodos.filter((item) => item.id !== action.payload)
+    },
+    removeAllTodos: (state:ITodos, action: PayloadAction) => {
+      state.todos = []
+      state.oldTodos = []
+    }
   },
 })
 
-export const { addTodo, removeTodo, changeTodo } = todoSlice.actions
+export const { addTodo, removeTodo, changeTodo,restoreTodo,removeAllTodos } = todoSlice.actions
 
 export default todoSlice.reducer

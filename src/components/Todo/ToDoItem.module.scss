@@ -1,0 +1,23 @@
+.oldTodo {
+  text-decoration: line-through darkred;
+  position: relative;
+  color: #000000;
+}
+
+.action__restore {
+  color: black;
+}
+
+.action {
+  cursor: pointer;
+}
+
+.todoText {
+  font-size: 18px;
+  line-height: 150%;
+}
+
+.todoId {
+  font-size: 8px;
+
+}
