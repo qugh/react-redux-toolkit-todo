@@ -26,14 +26,14 @@ const HomePage: FC = () => {
             text={clearAllTag}
           />
         )}
-        {todos.map(({ id, todoText }) => (
+        {todos.map(({ id, todoText, date }) => (
           <li key={id}>
-            <ToDoItem id={id} todoText={todoText} isOld={false} />
+            <ToDoItem date={date} id={id} todoText={todoText} isOld={false} />
           </li>
         ))}
-        {oldTodos.map(({ id, todoText }) => (
+        {oldTodos.map(({ id, todoText, date }) => (
           <li key={id}>
-            <ToDoItem id={id} todoText={todoText} isOld={true} />
+            <ToDoItem date={date} id={id} todoText={todoText} isOld={true} />
           </li>
         ))}
       </ul>

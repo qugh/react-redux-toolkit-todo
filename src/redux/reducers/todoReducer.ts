@@ -38,7 +38,7 @@ const todoSlice = createSlice({
         (item) => item.id !== action.payload
       )
     },
-    removeAllTodos: (state: ITodos, action: PayloadAction) => {
+    removeAllTodos: (state: ITodos) => {
       //state.todos = []
       state.oldTodos = []
     },

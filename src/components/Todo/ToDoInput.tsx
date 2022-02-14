@@ -16,6 +16,7 @@ const ToDoInput:FC = () => {
                     addTodo({
                         id: nanoid(16),
                         todoText: newTodo,
+                        date: new Date().toLocaleString()
                     })
                 )
                 setNewTodo('')

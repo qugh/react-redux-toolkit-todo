@@ -23,7 +23,7 @@ interface ITodoItem extends ITodo {
   isOld: boolean
 }
 
-const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld }) => {
+const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
   const [editMode, setEditMode] = useState(false)
   const [todoValue, setTodoValue] = useState(todoText)
   const dispatch = useAppDispatch()
@@ -31,6 +31,7 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld }) => {
   const TodoItem = () => (
     <>
       <div className={styles.todoText}>{todoText}</div>
+      <div className={styles.todoDate}>{date}</div>
       <div className={styles.todoId}>id: {id}</div>
     </>
   )
@@ -50,6 +51,7 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld }) => {
         changeTodo({
           id,
           todoText: todoValue,
+          date: new Date().toLocaleString() + ' (changed)'
         })
       )
     } else {
