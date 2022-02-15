@@ -32,13 +32,11 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
   const dispatch = useAppDispatch()
   const {
     alertStatus,
-    alertText,
-    setAlertStatus,
-    setAlertText,
     handleExited,
     setSnackPack,
     action,
-    handleCloseAlert
+    handleCloseAlert,
+    messageInfo
   } = useAlert()
 
 
@@ -51,25 +49,12 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
     </>
   )
   const showAlert = (message:string) => {
-    debugger;
-    setSnackPack((prev) => [...prev, { message, key: new Date().getTime() }])
-    setAlertText(`Todo with name '${todoValue} ${message}'`)
-    setAlertStatus(true)
+    setSnackPack((prev) => [...prev, { message:`Todo with name '${todoValue}' ${message}`, key: new Date().getTime() }])
   }
-
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    let message=todoText
-    let key = new Date().getTime()
-    setSnackPack((prev) => [...prev, { message, key}])
     dispatch(removeTodo(id))
     showAlert('deleted successfully')
   }
-
-  const openEditMode = (e: MouseEvent<HTMLSpanElement>) => setEditMode(true)
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setTodoValue(e.currentTarget.value)
-
   const editTodo = () => {
     const isValueHasChanged = todoText !== todoValue
     if (todoValue && isValueHasChanged) {
@@ -86,6 +71,14 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
     }
     setEditMode(false)
   }
+
+  const openEditMode = (e: MouseEvent<HTMLSpanElement>) => setEditMode(true)
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setTodoValue(e.currentTarget.value)
+
+
+
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code === 'Enter' || e.code === 'Escape') editTodo()
@@ -120,15 +113,7 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
           className={clsx([styles.action, styles.action__restore])}
           onClick={handleClickRestore}
         />
-        <Snackbar
-          open={alertStatus}
-          autoHideDuration={4000}
-          onClose={handleCloseAlert}
-          message={alertText}
-          action={action}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          TransitionProps={{ onExited: handleExited }}
-        />
+
       </>
     )
 
@@ -157,17 +142,8 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
         className={styles.action}
         onClick={handleClick}
       />
-      <Snackbar
-        open={alertStatus}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        message={alertText}
-        action={action}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        TransitionProps={{ onExited: handleExited }}
-      />
+
     </>
   )
 }
-
 export default ToDoItem

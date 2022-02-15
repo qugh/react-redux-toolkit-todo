@@ -19,23 +19,14 @@ import useAlert from '../../hooks/useAlert'
 const ToDoInput: FC = () => {
   const dispatch = useAppDispatch()
   const {
-    alertStatus,
-    alertText,
-    setAlertStatus,
-    setAlertText,
-    handleExited,
     setSnackPack,
-    action,
-    handleCloseAlert
   } = useAlert()
   const [newTodo, setNewTodo] = useState('')
 
   const showAlert = () => {
-    const message=newTodo
-    setSnackPack((prev) => [...prev, { message, key: new Date().getTime() }])
+
+    setSnackPack((prev) => [...prev, { message: `Todo with name '${newTodo}' added successfully`, key: new Date().getTime() }])
     setNewTodo('')
-    setAlertText(`Todo with name '${newTodo}' added successfully`)
-    setAlertStatus(true)
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -63,15 +54,6 @@ const ToDoInput: FC = () => {
         onChange={handleChange}
         onKeyDown={handleKeyPress}
         placeholder={'Add todo'}
-      />
-      <Snackbar
-        open={alertStatus}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        message={alertText}
-        action={action}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        TransitionProps={{ onExited: handleExited }}
       />
     </>
   )

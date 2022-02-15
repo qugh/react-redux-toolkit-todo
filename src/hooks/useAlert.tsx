@@ -1,6 +1,8 @@
 import { SyntheticEvent, useEffect, useState } from 'react'
 import TransparentButton from '../components/TransparentButton/TransparentButton'
 import { closeTag } from '../constants/symbols'
+import * as React from 'react'
+import { SnackbarCloseReason } from '@mui/material'
 export interface SnackbarMessage {
   message: string
   key: number
@@ -12,9 +14,13 @@ const useAlert = () => {
   const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(
     undefined
   )
-  const handleCloseAlert = (event: Event | SyntheticEvent) => {
+  const handleCloseAlert = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
     setAlertStatus(false)
   }
+
 
   const action = (
     <TransparentButton
@@ -26,7 +32,6 @@ const useAlert = () => {
   useEffect(() => {
 
     if (snackPack.length && !messageInfo) {
-
       // Set a new snack when we don't have an active one
       setMessageInfo({ ...snackPack[0] })
 
@@ -38,6 +43,14 @@ const useAlert = () => {
       setAlertStatus(false)
     }
   }, [snackPack, messageInfo, alertStatus])
+
+  useEffect( () => {
+    console.log(messageInfo)
+  },[messageInfo])
+
+  useEffect( () => {
+    console.log(alertStatus)
+  },[alertStatus])
 
   const handleExited = () => {
     setMessageInfo(undefined)
@@ -52,6 +65,7 @@ const useAlert = () => {
     setAlertText,
     handleExited,
     setSnackPack,
+    messageInfo
   }
 }
 
