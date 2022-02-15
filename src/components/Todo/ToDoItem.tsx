@@ -18,6 +18,9 @@ import Input from '@mui/material/Input'
 import clsx from 'clsx'
 import TransparentButton from '../TransparentButton/TransparentButton'
 import { closeTag, restoreTag } from '../../constants/symbols'
+import useAlert from '../../hooks/useAlert'
+import { Snackbar } from '@mui/material'
+import { nanoid } from '@reduxjs/toolkit'
 
 interface ITodoItem extends ITodo {
   isOld: boolean
@@ -27,6 +30,18 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
   const [editMode, setEditMode] = useState(false)
   const [todoValue, setTodoValue] = useState(todoText)
   const dispatch = useAppDispatch()
+  const {
+    alertStatus,
+    alertText,
+    setAlertStatus,
+    setAlertText,
+    handleExited,
+    setSnackPack,
+    action,
+    handleCloseAlert
+  } = useAlert()
+
+
 
   const TodoItem = () => (
     <>
@@ -35,9 +50,20 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
       <div className={styles.todoId}>id: {id}</div>
     </>
   )
+  const showAlert = (message:string) => {
+    debugger;
+    setSnackPack((prev) => [...prev, { message, key: new Date().getTime() }])
+    setAlertText(`Todo with name '${todoValue} ${message}'`)
+    setAlertStatus(true)
+  }
 
-  const handleClick = (e: MouseEvent<HTMLButtonElement>) =>
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    let message=todoText
+    let key = new Date().getTime()
+    setSnackPack((prev) => [...prev, { message, key}])
     dispatch(removeTodo(id))
+    showAlert('deleted successfully')
+  }
 
   const openEditMode = (e: MouseEvent<HTMLSpanElement>) => setEditMode(true)
 
@@ -54,6 +80,7 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
           date: new Date().toLocaleString() + ' (changed)'
         })
       )
+      showAlert('renamed successfully')
     } else {
       setTodoValue(todoText)
     }
@@ -61,17 +88,25 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === 'Escape' || e.code === 'Enter') editTodo()
+    if (e.code === 'Enter' || e.code === 'Escape') editTodo()
   }
 
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     e.currentTarget.select()
   }
 
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => editTodo()
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) =>
+  {
+    editTodo()
+  }
 
-  const handleClickRestore = (e: MouseEvent<HTMLSpanElement>) =>
+  const handleClickRestore = (e: MouseEvent<HTMLButtonElement>) => {
     dispatch(restoreTodo(id))
+    showAlert('restored successfully')
+  }
+
+
+
 
   if (isOld)
     return (
@@ -84,6 +119,15 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
           text={restoreTag}
           className={clsx([styles.action, styles.action__restore])}
           onClick={handleClickRestore}
+        />
+        <Snackbar
+          open={alertStatus}
+          autoHideDuration={4000}
+          onClose={handleCloseAlert}
+          message={alertText}
+          action={action}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          TransitionProps={{ onExited: handleExited }}
         />
       </>
     )
@@ -113,8 +157,15 @@ const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
         className={styles.action}
         onClick={handleClick}
       />
-
-
+      <Snackbar
+        open={alertStatus}
+        autoHideDuration={4000}
+        onClose={handleCloseAlert}
+        message={alertText}
+        action={action}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        TransitionProps={{ onExited: handleExited }}
+      />
     </>
   )
 }
