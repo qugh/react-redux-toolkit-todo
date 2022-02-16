@@ -6,7 +6,7 @@ type ButtonProps = {
   id?: string
   text: string
   className?: string
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void
+  onClick: (e:MouseEvent<HTMLButtonElement>) => void
   sx?: CSSProperties | undefined
 }
 
@@ -15,7 +15,7 @@ const TransparentButton: FC<ButtonProps> = ({
   text,
   onClick,
   id,
-                                              sx
+  sx,
 }) => {
   return (
     <button
