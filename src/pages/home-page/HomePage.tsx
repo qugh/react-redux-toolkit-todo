@@ -34,7 +34,7 @@ const HomePage: FC = () => {
   } = useAlert()
 
   return (
-    <div className={'wrapper'}>
+    <>
       <ToDoInput setSnackPack={setSnackPack} />
       <ul className={styles.todo_container}>
         {!!oldTodos.length && (
@@ -78,7 +78,7 @@ const HomePage: FC = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         TransitionProps={{ onExited: handleExited }}
       />
-    </div>
+    </>
   )
 }
 

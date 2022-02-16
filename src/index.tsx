@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './styles/index.css'
 import './styles/normalize.css'
+import './styles/index.css'
 import 'typeface-roboto'
 import { Provider } from 'react-redux'
 import setupStore from './redux/store'

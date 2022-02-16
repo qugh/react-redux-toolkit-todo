@@ -4,13 +4,13 @@ import {
   useState,
   ChangeEvent,
   KeyboardEvent,
-  FocusEvent,
+  FocusEvent
 } from 'react'
 import { ITodo } from '../../types/Todo'
 import {
   changeTodo,
   removeTodo,
-  restoreTodo,
+  restoreTodo
 } from '../../redux/reducers/todoReducer'
 import { useAppDispatch } from '../../hooks/redux'
 import styles from './ToDoItem.module.scss'
@@ -26,12 +26,12 @@ interface ITodoItem extends ITodo {
 }
 
 const ToDoItem: FC<ITodoItem> = ({
-  setSnackPack,
-  id,
-  todoText,
-  isOld,
-  date,
-}) => {
+                                   setSnackPack,
+                                   id,
+                                   todoText,
+                                   isOld,
+                                   date
+                                 }) => {
   const [editMode, setEditMode] = useState(false)
   const [todoValue, setTodoValue] = useState(todoText)
   const dispatch = useAppDispatch()
@@ -41,8 +41,8 @@ const ToDoItem: FC<ITodoItem> = ({
       ...prev,
       {
         message: makeAlert(action, todoText),
-        key: new Date().getTime(),
-      },
+        key: new Date().getTime()
+      }
     ])
   }
 
@@ -65,7 +65,7 @@ const ToDoItem: FC<ITodoItem> = ({
         changeTodo({
           id,
           todoText: todoValue,
-          date: new Date().toLocaleString() + ' (changed)',
+          date: new Date().toLocaleString() + ' (changed)'
         })
       )
       showAlert('renameTodo')
@@ -93,24 +93,20 @@ const ToDoItem: FC<ITodoItem> = ({
     dispatch(restoreTodo(id))
     showAlert('restoreTodo')
   }
-
+  if (isOld) return (<>
+    <del className={styles.oldTodo}>
+      <TodoItem />
+    </del>
+    <TransparentButton
+      text={restoreTag}
+      className={clsx([styles.action, styles.action__restore])}
+      onClick={handleClickRestore}
+    />
+  </>
+)
   return (
     <>
-      {isOld && (
-        <>
-          <del className={styles.oldTodo}>
-            <TodoItem />
-          </del>
-
-          <TransparentButton
-            text={restoreTag}
-            className={clsx([styles.action, styles.action__restore])}
-            onClick={handleClickRestore}
-          />
-        </>
-      )}
-
-      {editMode && !isOld ? (
+      {editMode ? (
         <Input
           value={todoValue}
           id={id}
@@ -121,8 +117,8 @@ const ToDoItem: FC<ITodoItem> = ({
           onFocus={handleFocus}
           autoFocus
         />
-      ) : (
-        !isOld && (
+      ) :
+         (
           <>
             <span onClick={openEditMode}>
               <TodoItem />
@@ -134,7 +130,7 @@ const ToDoItem: FC<ITodoItem> = ({
             />
           </>
         )
-      )}
+      }
     </>
   )
 }
