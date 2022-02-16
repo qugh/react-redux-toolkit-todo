@@ -18,33 +18,28 @@ import Input from '@mui/material/Input'
 import clsx from 'clsx'
 import TransparentButton from '../TransparentButton/TransparentButton'
 import { closeTag, restoreTag } from '../../constants/symbols'
-import makeAlert, { actions } from '../../utils/makeAlert'
+import useAlert from '../../hooks/useAlert'
+import { Snackbar } from '@mui/material'
+import { nanoid } from '@reduxjs/toolkit'
 
 interface ITodoItem extends ITodo {
   isOld: boolean
-  setSnackPack: any
 }
 
-const ToDoItem: FC<ITodoItem> = ({
-  setSnackPack,
-  id,
-  todoText,
-  isOld,
-  date,
-}) => {
+const ToDoItem: FC<ITodoItem> = ({ id, todoText, isOld, date }) => {
   const [editMode, setEditMode] = useState(false)
   const [todoValue, setTodoValue] = useState(todoText)
   const dispatch = useAppDispatch()
+  const {
+    alertStatus,
+    handleExited,
+    setSnackPack,
+    action,
+    handleCloseAlert,
+    messageInfo
+  } = useAlert()
 
-  const showAlert = (action: typeof actions) => {
-    setSnackPack((prev: any) => [
-      ...prev,
-      {
-        message: makeAlert(action, todoText),
-        key: new Date().getTime(),
-      },
-    ])
-  }
+
 
   const TodoItem = () => (
     <>
@@ -53,11 +48,13 @@ const ToDoItem: FC<ITodoItem> = ({
       <div className={styles.todoId}>id: {id}</div>
     </>
   )
-  const removeClickHandler = (e: MouseEvent<HTMLButtonElement>) => {
-    dispatch(removeTodo(id))
-    showAlert('removeTodo')
+  const showAlert = (message:string) => {
+    setSnackPack((prev) => [...prev, { message:`Todo with name '${todoValue}' ${message}`, key: new Date().getTime() }])
   }
-
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
+    dispatch(removeTodo(id))
+    showAlert('deleted successfully')
+  }
   const editTodo = () => {
     const isValueHasChanged = todoText !== todoValue
     if (todoValue && isValueHasChanged) {
@@ -65,10 +62,10 @@ const ToDoItem: FC<ITodoItem> = ({
         changeTodo({
           id,
           todoText: todoValue,
-          date: new Date().toLocaleString() + ' (changed)',
+          date: new Date().toLocaleString() + ' (changed)'
         })
       )
-      showAlert('renameTodo')
+      showAlert('renamed successfully')
     } else {
       setTodoValue(todoText)
     }
@@ -80,61 +77,72 @@ const ToDoItem: FC<ITodoItem> = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
     setTodoValue(e.currentTarget.value)
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) =>
-    (e.code === 'Enter' || e.code === 'Escape') && editTodo()
+
+
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === 'Enter' || e.code === 'Escape') editTodo()
+  }
 
   const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     e.currentTarget.select()
   }
 
-  const editOnBlurHandler = (e: FocusEvent<HTMLInputElement>) => editTodo()
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) =>
+  {
+    editTodo()
+  }
 
   const handleClickRestore = (e: MouseEvent<HTMLButtonElement>) => {
     dispatch(restoreTodo(id))
-    showAlert('restoreTodo')
+    showAlert('restored successfully')
   }
+
+
+
+
+  if (isOld)
+    return (
+      <>
+        <del className={styles.oldTodo}>
+          <TodoItem />
+        </del>
+
+        <TransparentButton
+          text={restoreTag}
+          className={clsx([styles.action, styles.action__restore])}
+          onClick={handleClickRestore}
+        />
+
+      </>
+    )
 
   return (
     <>
-      {isOld && (
-        <>
-          <del className={styles.oldTodo}>
-            <TodoItem />
-          </del>
-
-          <TransparentButton
-            text={restoreTag}
-            className={clsx([styles.action, styles.action__restore])}
-            onClick={handleClickRestore}
-          />
-        </>
-      )}
-
-      {editMode && !isOld ? (
+      {editMode ? (
         <Input
           value={todoValue}
           id={id}
           onChange={handleChange}
           sx={{ width: '30%' }}
           onKeyDown={handleKeyDown}
-          onBlur={editOnBlurHandler}
+          onBlur={handleBlur}
           onFocus={handleFocus}
           autoFocus
         />
       ) : (
-        !isOld && (
-          <>
-            <span onClick={openEditMode}>
-              <TodoItem />
-            </span>
-            <TransparentButton
-              text={closeTag}
-              className={styles.action}
-              onClick={removeClickHandler}
-            />
-          </>
-        )
+        <span onClick={openEditMode}>
+          <TodoItem />
+        </span>
       )}
+
+
+      <TransparentButton
+        text={closeTag}
+        className={styles.action}
+        onClick={handleClick}
+      />
+
     </>
   )
 }

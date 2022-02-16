@@ -1,19 +1,31 @@
-import { ChangeEvent, FC, KeyboardEvent, useState } from 'react'
+import {
+  ChangeEvent,
+  FC,
+  KeyboardEvent,
+  useState,
+  SyntheticEvent,
+  useEffect,
+} from 'react'
 import { addTodo } from '../../redux/reducers/todoReducer'
-import { nanoid } from '@reduxjs/toolkit'
+import { current, nanoid } from '@reduxjs/toolkit'
 import { useAppDispatch } from '../../hooks/redux'
-import { Input} from '@mui/material'
-import makeAlert from '../../utils/makeAlert'
+import { Input, Snackbar } from '@mui/material'
+import { closeTag } from '../../constants/symbols'
+import TransparentButton from '../TransparentButton/TransparentButton'
+import useAlert from '../../hooks/useAlert'
 
-const ToDoInput: FC<{ setSnackPack: any }> = ({ setSnackPack }) => {
+
+
+const ToDoInput: FC = () => {
   const dispatch = useAppDispatch()
+  const {
+    setSnackPack,
+  } = useAlert()
   const [newTodo, setNewTodo] = useState('')
 
   const showAlert = () => {
-    setSnackPack((prev: any) => [
-      ...prev,
-      { message: makeAlert('addTodo', newTodo), key: new Date().getTime() },
-    ])
+
+    setSnackPack((prev) => [...prev, { message: `Todo with name '${newTodo}' added successfully`, key: new Date().getTime() }])
     setNewTodo('')
   }
 
@@ -21,16 +33,14 @@ const ToDoInput: FC<{ setSnackPack: any }> = ({ setSnackPack }) => {
     setNewTodo(e.target.value)
   }
 
-  const handleKeyPress = (
-    e: KeyboardEvent<HTMLInputElement>,
-    date = new Date().toLocaleString()
-  ) => {
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (newTodo && e.key === 'Enter') {
       dispatch(
         addTodo({
           id: nanoid(16),
           todoText: newTodo,
-          date,
+          date: new Date().toLocaleString(),
         })
       )
       showAlert()

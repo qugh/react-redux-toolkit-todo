@@ -3,6 +3,11 @@ import useAlert from '../hooks/useAlert'
 import { useEffect, useState } from 'react'
 
 const Alert = () => {
+  const [rerender, setRerender] = useState(false);
+
+
+
+
   const {
     alertStatus,
     handleExited,
@@ -10,6 +15,9 @@ const Alert = () => {
     messageInfo,
     handleCloseAlert
   } = useAlert()
+  useEffect(()=>{
+    setRerender(!rerender);     //whenever you want to re-render
+  },[alertStatus])
   return (      <Snackbar
     key={ messageInfo?.key}
     open={alertStatus}
