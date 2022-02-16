@@ -10,6 +10,9 @@
     border: none;
     background: #696b6c;
     cursor: pointer;
+    &:hover {
+      transform: translateY(-5px);
+    }
   }
 
   li {
@@ -21,7 +24,7 @@
     color: white;
     display: flex;
     justify-content: space-between;
-
+    align-items: center;
     .action {
       cursor: pointer;
     }

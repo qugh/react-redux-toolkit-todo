@@ -18,11 +18,11 @@ const todoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: (state: ITodos, action: PayloadAction<ITodo>) => {
-      state.todos.push(action.payload)
+      state.todos.unshift(action.payload)
     },
     removeTodo: (state: ITodos, action: PayloadAction<string>) => {
       const oldTodo = state.todos.find((item) => item.id === action.payload)
-      state.oldTodos.push(oldTodo!)
+      state.oldTodos.unshift(oldTodo!)
       state.todos = state.todos.filter((item) => item.id !== action.payload)
     },
     changeTodo: (state: ITodos, action: PayloadAction<ITodo>) => {
