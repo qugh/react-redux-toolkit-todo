@@ -1,6 +1,6 @@
 import { FC, MouseEvent } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import getTodos, {getMarkedTodosCount} from '../../redux/selectors/todoSelector'
+import getTodos, {getIsSomeTodoMarkedSelector} from '../../redux/selectors/todoSelector'
 import styles from './HomePage.module.scss'
 import ToDoInput from '../../components/Todo/ToDoInput'
 import ToDoItem from '../../components/Todo/ToDoItem'
@@ -13,7 +13,7 @@ import makeAlert, { actions2 } from '../../utils/makeAlert'
 const {REMOVE_ALL_TODOS}= actions2
 const HomePage: FC = () => {
   const {todos} = useAppSelector(getTodos)
-  const isSomeTodoMarked = useAppSelector(getMarkedTodosCount)
+  const isSomeTodoMarked = useAppSelector(getIsSomeTodoMarkedSelector)
   const dispatch = useAppDispatch()
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     dispatch(removeAllTodos()) // Todo modal window
@@ -51,7 +51,7 @@ console.log('render')
               date={date}
               id={id}
               todoText={todoText}
-              isOld={isMarked!}
+              isMarked={isMarked}
               setSnackPack={setSnackPack}
             />
           </li>

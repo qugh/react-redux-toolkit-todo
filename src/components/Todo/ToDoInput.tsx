@@ -42,6 +42,7 @@ const ToDoInput: FC<{
           id: nanoid(16),
           todoText: newTodo,
           date: new Date().toLocaleString(),
+          isMarked: false
         })
       )
       showAlert()

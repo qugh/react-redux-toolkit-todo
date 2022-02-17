@@ -24,7 +24,6 @@ const { RESTORE_TODO, REMOVE_TODO, RENAME_TODO, ADD_TODO, REMOVE_ALL_TODOS } =
   actions2
 
 interface ITodoItem extends ITodo {
-  isOld: boolean
   setSnackPack: any
 }
 
@@ -32,8 +31,8 @@ const ToDoItem: FC<ITodoItem> = ({
   setSnackPack,
   id,
   todoText,
-  isOld,
   date,
+  isMarked,
 }) => {
   const [editMode, setEditMode] = useState(false)
   const [todoValue, setTodoValue] = useState(todoText)
@@ -96,7 +95,7 @@ const ToDoItem: FC<ITodoItem> = ({
     dispatch(restoreTodo(id))
     showAlert(RESTORE_TODO)
   }
-  if (isOld)
+  if (isMarked)
     return (
       <>
         <del className={styles.oldTodo}>
