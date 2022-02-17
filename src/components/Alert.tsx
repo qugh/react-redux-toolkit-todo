@@ -1,6 +1,5 @@
 import { Snackbar } from '@mui/material'
 import useAlert from '../hooks/useAlert'
-import { useEffect, useState } from 'react'
 
 const Alert = () => {
   const {

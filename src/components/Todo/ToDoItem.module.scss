@@ -4,13 +4,22 @@
   color: #000000;
 }
 
-.action__restore {
-  color: black;
+.action {
+  transition:all 0.4s ease;
+  cursor: pointer;
+  &:hover {
+    transform: rotate(-90deg);
+  }
 }
 
-.action {
-  cursor: pointer;
+.action__restore {
+  color: black;
+  &:hover{
+    transform: rotate(90deg);
+  }
 }
+
+
 
 .todoText {
   font-size: 18px;

@@ -4,13 +4,13 @@ import {
   useState,
   ChangeEvent,
   KeyboardEvent,
-  FocusEvent
+  FocusEvent,
 } from 'react'
 import { ITodo } from '../../types/Todo'
 import {
   changeTodo,
   removeTodo,
-  restoreTodo
+  restoreTodo,
 } from '../../redux/reducers/todoReducer'
 import { useAppDispatch } from '../../hooks/redux'
 import styles from './ToDoItem.module.scss'
@@ -18,7 +18,10 @@ import Input from '@mui/material/Input'
 import clsx from 'clsx'
 import TransparentButton from '../TransparentButton/TransparentButton'
 import { closeTag, restoreTag } from '../../constants/symbols'
-import makeAlert, { actions } from '../../utils/makeAlert'
+import makeAlert, { actions2 } from '../../utils/makeAlert'
+
+const { RESTORE_TODO, REMOVE_TODO, RENAME_TODO, ADD_TODO, REMOVE_ALL_TODOS } =
+  actions2
 
 interface ITodoItem extends ITodo {
   isOld: boolean
@@ -26,23 +29,23 @@ interface ITodoItem extends ITodo {
 }
 
 const ToDoItem: FC<ITodoItem> = ({
-                                   setSnackPack,
-                                   id,
-                                   todoText,
-                                   isOld,
-                                   date
-                                 }) => {
+  setSnackPack,
+  id,
+  todoText,
+  isOld,
+  date,
+}) => {
   const [editMode, setEditMode] = useState(false)
   const [todoValue, setTodoValue] = useState(todoText)
   const dispatch = useAppDispatch()
 
-  const showAlert = (action: typeof actions) => {
+  const showAlert = (action: actions2) => {
     setSnackPack((prev: any) => [
       ...prev,
       {
         message: makeAlert(action, todoText),
-        key: new Date().getTime()
-      }
+        key: new Date().getTime(),
+      },
     ])
   }
 
@@ -55,7 +58,7 @@ const ToDoItem: FC<ITodoItem> = ({
   )
   const removeClickHandler = (e: MouseEvent<HTMLButtonElement>) => {
     dispatch(removeTodo(id))
-    showAlert('removeTodo')
+    showAlert(REMOVE_TODO)
   }
 
   const editTodo = () => {
@@ -65,10 +68,10 @@ const ToDoItem: FC<ITodoItem> = ({
         changeTodo({
           id,
           todoText: todoValue,
-          date: new Date().toLocaleString() + ' (changed)'
+          date: new Date().toLocaleString() + ' (changed)',
         })
       )
-      showAlert('renameTodo')
+      showAlert(RENAME_TODO)
     } else {
       setTodoValue(todoText)
     }
@@ -91,19 +94,21 @@ const ToDoItem: FC<ITodoItem> = ({
 
   const handleClickRestore = (e: MouseEvent<HTMLButtonElement>) => {
     dispatch(restoreTodo(id))
-    showAlert('restoreTodo')
+    showAlert(RESTORE_TODO)
   }
-  if (isOld) return (<>
-    <del className={styles.oldTodo}>
-      <TodoItem />
-    </del>
-    <TransparentButton
-      text={restoreTag}
-      className={clsx([styles.action, styles.action__restore])}
-      onClick={handleClickRestore}
-    />
-  </>
-)
+  if (isOld)
+    return (
+      <>
+        <del className={styles.oldTodo}>
+          <TodoItem />
+        </del>
+        <TransparentButton
+          text={restoreTag}
+          className={clsx([styles.action, styles.action__restore])}
+          onClick={handleClickRestore}
+        />
+      </>
+    )
   return (
     <>
       {editMode ? (
@@ -117,20 +122,18 @@ const ToDoItem: FC<ITodoItem> = ({
           onFocus={handleFocus}
           autoFocus
         />
-      ) :
-         (
-          <>
-            <span onClick={openEditMode}>
-              <TodoItem />
-            </span>
-            <TransparentButton
-              text={closeTag}
-              className={styles.action}
-              onClick={removeClickHandler}
-            />
-          </>
-        )
-      }
+      ) : (
+        <>
+          <span onClick={openEditMode}>
+            <TodoItem />
+          </span>
+          <TransparentButton
+            text={closeTag}
+            className={styles.action}
+            onClick={removeClickHandler}
+          />
+        </>
+      )}
     </>
   )
 }

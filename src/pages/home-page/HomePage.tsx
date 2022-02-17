@@ -1,6 +1,6 @@
 import { FC, MouseEvent } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import getTodos from '../../redux/selectors/todoSelector'
+import getTodos, {getMarkedTodosCount} from '../../redux/selectors/todoSelector'
 import styles from './HomePage.module.scss'
 import ToDoInput from '../../components/Todo/ToDoInput'
 import ToDoItem from '../../components/Todo/ToDoItem'
@@ -9,17 +9,18 @@ import TransparentButton from '../../components/TransparentButton/TransparentBut
 import { clearAllTag } from '../../constants/symbols'
 import useAlert from '../../hooks/useAlert'
 import { Snackbar } from '@mui/material'
-import makeAlert from '../../utils/makeAlert'
-
+import makeAlert, { actions2 } from '../../utils/makeAlert'
+const {REMOVE_ALL_TODOS}= actions2
 const HomePage: FC = () => {
-  const { oldTodos, todos } = useAppSelector(getTodos)
+  const {todos} = useAppSelector(getTodos)
+  const isSomeTodoMarked = useAppSelector(getMarkedTodosCount)
   const dispatch = useAppDispatch()
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     dispatch(removeAllTodos()) // Todo modal window
     setSnackPack((prev) => [
       ...prev,
       {
-        message: makeAlert('removeAllTodos'),
+        message: makeAlert(REMOVE_ALL_TODOS),
         key: new Date().getTime(),
       },
     ])
@@ -30,44 +31,32 @@ const HomePage: FC = () => {
     setSnackPack,
     action,
     handleCloseAlert,
-    messageInfo,
+    messageInfo
   } = useAlert()
-
+console.log('render')
   return (
     <>
       <ToDoInput setSnackPack={setSnackPack} />
       <ul className={styles.todo_container}>
-        {!!oldTodos.length && (
+        {isSomeTodoMarked && (
           <TransparentButton
             onClick={handleClick}
             className={styles.delete_all}
             text={clearAllTag}
           />
         )}
-        {todos.map(({ id, todoText, date }) => (
+        {todos.map(({ id, todoText, date,isMarked }) => (
           <li key={id}>
             <ToDoItem
               date={date}
               id={id}
               todoText={todoText}
-              isOld={false}
-              setSnackPack={setSnackPack}
-            />
-          </li>
-        ))}
-        {oldTodos.map(({ id, todoText, date }) => (
-          <li key={id}>
-            <ToDoItem
-              date={date}
-              id={id}
-              todoText={todoText}
-              isOld={true}
+              isOld={isMarked!}
               setSnackPack={setSnackPack}
             />
           </li>
         ))}
       </ul>
-
       <Snackbar
         key={messageInfo?.key}
         open={alertStatus}

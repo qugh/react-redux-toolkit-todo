@@ -1,29 +1,31 @@
-export let actions:
-  | 'renameTodo'
-  | 'removeTodo'
-  | 'restoreTodo'
-  | 'addTodo'
-  | 'removeAllTodos'
+export enum actions2 {
+  RENAME_TODO = 'renameTodo',
+  REMOVE_TODO = 'removeTodo',
+  RESTORE_TODO = 'restoreTodo',
+  ADD_TODO = 'addTodo',
+  REMOVE_ALL_TODOS = 'removeAllTodos',
+}
 
-type actionTypes = typeof actions
+const { RENAME_TODO, REMOVE_TODO, RESTORE_TODO, REMOVE_ALL_TODOS, ADD_TODO } =
+  actions2
 
-const makeAlert = (action: actionTypes, text?: string) => {
+const makeAlert = (action: actions2, text?: string) => {
   let message: string
   switch (action) {
-    case 'addTodo': {
+    case  ADD_TODO: {
       message = `Todo with name ${text?.toUpperCase()} added successfully`
       break
     }
-    case 'removeTodo':
+    case REMOVE_TODO:
       message = `Todo with name ${text?.toUpperCase()} removed successfully`
       break
-    case 'renameTodo':
+    case RENAME_TODO:
       message = `Todo with name ${text?.toUpperCase()} renamed successfully `
       break
-    case 'restoreTodo':
+    case RESTORE_TODO:
       message = `Todo with name ${text?.toUpperCase()} restored successfully`
       break
-    case 'removeAllTodos': {
+    case REMOVE_ALL_TODOS: {
       message = `Marked todos removed`
       break
     }

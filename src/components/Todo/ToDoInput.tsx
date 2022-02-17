@@ -1,18 +1,32 @@
-import { ChangeEvent, FC, KeyboardEvent, useState } from 'react'
+import {
+  ChangeEvent,
+  FC,
+  KeyboardEvent,
+  useState,
+  SetStateAction,
+  Dispatch,
+} from 'react'
 import { addTodo } from '../../redux/reducers/todoReducer'
 import { nanoid } from '@reduxjs/toolkit'
 import { useAppDispatch } from '../../hooks/redux'
-import { Input} from '@mui/material'
-import makeAlert from '../../utils/makeAlert'
+import { Input } from '@mui/material'
+import makeAlert, { actions2 } from '../../utils/makeAlert'
+import { SnackbarMessage } from '../../hooks/useAlert'
 
-const ToDoInput: FC<{ setSnackPack: any }> = ({ setSnackPack }) => {
+const { ADD_TODO } = actions2
+
+const ToDoInput: FC<{
+  setSnackPack: Dispatch<SetStateAction<readonly SnackbarMessage[]>>
+}> = ({ setSnackPack }) => {
   const dispatch = useAppDispatch()
   const [newTodo, setNewTodo] = useState('')
-
   const showAlert = () => {
     setSnackPack((prev: any) => [
       ...prev,
-      { message: makeAlert('addTodo', newTodo), key: new Date().getTime() },
+      {
+        message: makeAlert(ADD_TODO, newTodo),
+        key: new Date().getTime(),
+      },
     ])
     setNewTodo('')
   }
@@ -21,16 +35,13 @@ const ToDoInput: FC<{ setSnackPack: any }> = ({ setSnackPack }) => {
     setNewTodo(e.target.value)
   }
 
-  const handleKeyPress = (
-    e: KeyboardEvent<HTMLInputElement>,
-    date = new Date().toLocaleString()
-  ) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (newTodo && e.key === 'Enter') {
       dispatch(
         addTodo({
           id: nanoid(16),
           todoText: newTodo,
-          date,
+          date: new Date().toLocaleString(),
         })
       )
       showAlert()

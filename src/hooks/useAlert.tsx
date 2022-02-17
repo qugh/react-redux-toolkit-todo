@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import TransparentButton from '../components/TransparentButton/TransparentButton'
 import { closeTag } from '../constants/symbols'
 import { SyntheticEvent } from 'react'
+import { Slide, SlideProps } from '@mui/material'
 
 export interface SnackbarMessage {
   message: string
@@ -10,7 +11,6 @@ export interface SnackbarMessage {
 
 const useAlert = () => {
   const [alertStatus, setAlertStatus] = useState(false)
-  const [alertText, setAlertText] = useState<undefined | string>('')
   const [snackPack, setSnackPack] = useState<readonly SnackbarMessage[]>([])
   const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(
     undefined
@@ -43,32 +43,20 @@ const useAlert = () => {
     }
   }, [snackPack, messageInfo, alertStatus])
 
-  useEffect(() => {
-    console.log(messageInfo)
-  }, [messageInfo])
-
-  useEffect(() => {
-    console.log(alertStatus)
-  }, [alertStatus])
 
   const handleExited = () => {
     setMessageInfo(undefined)
   }
-  /*  type TransitionProps = Omit<SlideProps, 'direction'>;
-    function TransitionUp(props: TransitionProps) {
-      return <Slide} {...props} direction="up" />;
-    }*/
 
   return {
     handleCloseAlert,
     action,
     alertStatus,
-    alertText,
     setAlertStatus,
-    setAlertText,
     handleExited,
     setSnackPack,
     messageInfo,
+
   }
 }
 
