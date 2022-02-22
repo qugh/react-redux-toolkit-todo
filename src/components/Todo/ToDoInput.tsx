@@ -37,14 +37,7 @@ const ToDoInput: FC<{
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (newTodo && e.key === 'Enter') {
-      dispatch(
-        addTodo({
-          id: nanoid(16),
-          todoText: newTodo,
-          date: new Date().toLocaleString(),
-          isMarked: false
-        })
-      )
+      dispatch(addTodo(newTodo))
       showAlert()
     }
   }

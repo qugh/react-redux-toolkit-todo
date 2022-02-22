@@ -20,7 +20,7 @@ import TransparentButton from '../TransparentButton/TransparentButton'
 import { closeTag, restoreTag } from '../../constants/symbols'
 import makeAlert, { actions2 } from '../../utils/makeAlert'
 
-const { RESTORE_TODO, REMOVE_TODO, RENAME_TODO, ADD_TODO, REMOVE_ALL_TODOS } =
+const { RESTORE_TODO, REMOVE_TODO, RENAME_TODO } =
   actions2
 
 interface ITodoItem extends ITodo {
@@ -63,13 +63,7 @@ const ToDoItem: FC<ITodoItem> = ({
   const editTodo = () => {
     const isValueHasChanged = todoText !== todoValue
     if (todoValue && isValueHasChanged) {
-      dispatch(
-        changeTodo({
-          id,
-          todoText: todoValue,
-          date: new Date().toLocaleString() + ' (changed)',
-        })
-      )
+      dispatch(changeTodo(id, todoValue))
       showAlert(RENAME_TODO)
     } else {
       setTodoValue(todoText)
@@ -89,12 +83,14 @@ const ToDoItem: FC<ITodoItem> = ({
     e.currentTarget.select()
   }
 
-  const editOnBlurHandler = (e: FocusEvent<HTMLInputElement>) => editTodo()
+  const editOnBlurHandler = () => editTodo()
 
-  const handleClickRestore = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleClickRestore = () => {
     dispatch(restoreTodo(id))
     showAlert(RESTORE_TODO)
   }
+
+
   if (isMarked)
     return (
       <>
