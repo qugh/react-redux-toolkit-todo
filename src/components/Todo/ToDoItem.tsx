@@ -5,6 +5,7 @@ import {
   ChangeEvent,
   KeyboardEvent,
   FocusEvent,
+  useEffect,
 } from 'react'
 import { ITodo } from '../../types/Todo'
 import {
@@ -19,9 +20,9 @@ import clsx from 'clsx'
 import TransparentButton from '../TransparentButton/TransparentButton'
 import { closeTag, restoreTag } from '../../constants/symbols'
 import makeAlert, { actions2 } from '../../utils/makeAlert'
+import { timeAgo } from '../../features/todo/timeAgo'
 
-const { RESTORE_TODO, REMOVE_TODO, RENAME_TODO } =
-  actions2
+const { RESTORE_TODO, REMOVE_TODO, RENAME_TODO } = actions2
 
 interface ITodoItem extends ITodo {
   setSnackPack: any
@@ -37,7 +38,6 @@ const ToDoItem: FC<ITodoItem> = ({
   const [editMode, setEditMode] = useState(false)
   const [todoValue, setTodoValue] = useState(todoText)
   const dispatch = useAppDispatch()
-
   const showAlert = (action: actions2) => {
     setSnackPack((prev: any) => [
       ...prev,
@@ -51,11 +51,11 @@ const ToDoItem: FC<ITodoItem> = ({
   const TodoItem = () => (
     <>
       <div className={styles.todoText}>{todoText}</div>
-      <div className={styles.todoDate}>{date}</div>
+      <div className={styles.todoDate}>{timeAgo(date)}</div>
       <div className={styles.todoId}>id: {id}</div>
     </>
   )
-  const removeClickHandler = (e: MouseEvent<HTMLButtonElement>) => {
+  const removeClickHandler = () => {
     dispatch(removeTodo(id))
     showAlert(REMOVE_TODO)
   }
@@ -71,7 +71,7 @@ const ToDoItem: FC<ITodoItem> = ({
     setEditMode(false)
   }
 
-  const openEditMode = (e: MouseEvent<HTMLSpanElement>) => setEditMode(true)
+  const openEditMode = () => setEditMode(true)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
     setTodoValue(e.currentTarget.value)
@@ -89,7 +89,6 @@ const ToDoItem: FC<ITodoItem> = ({
     dispatch(restoreTodo(id))
     showAlert(RESTORE_TODO)
   }
-
 
   if (isMarked)
     return (

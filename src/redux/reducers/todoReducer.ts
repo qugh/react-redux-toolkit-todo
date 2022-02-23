@@ -1,7 +1,6 @@
 import {
   createSlice,
   PayloadAction,
-  createAsyncThunk,
   nanoid,
 } from '@reduxjs/toolkit'
 import { ITodo } from '../../types/Todo'
@@ -10,12 +9,10 @@ const todoSliceName = 'todo'
 
 interface ITodos {
   todos: Array<ITodo>
-  // oldTodos: Array<ITodo>
 }
 
 const initialState: ITodos = {
   todos: [],
-  // oldTodos: [], //Todo перенести все в один массив и сделал isOld
 }
 
 const todoSlice = createSlice({
@@ -52,11 +49,10 @@ const todoSlice = createSlice({
     },
     changeTodo: {
       reducer(state: ITodos, action: PayloadAction<ITodo>) {
-        const { id, todoText, date } = action.payload
+        const { id, todoText } = action.payload
         const existingTodo = state.todos.find((todo) => todo.id === id)
         if (existingTodo) {
           existingTodo.todoText = todoText
-          existingTodo.date = date
         }
       },
       prepare(id, todoText) {
@@ -64,7 +60,6 @@ const todoSlice = createSlice({
           payload: {
             id,
             todoText,
-            date: new Date().toLocaleString() + ' (changed)',
           },
         }
       },
